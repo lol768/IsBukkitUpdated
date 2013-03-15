@@ -1,8 +1,12 @@
 <?php
+function startsWith($haystack, $needle) {
+    return !strncmp($haystack, $needle, strlen($needle));
+}
 $baseUrl = "http://dl.bukkit.org/api/1.0/";
 $checkLatest = "downloads/projects/craftbukkit/view/latest/?_accept=application%2Fjson";
 $result = json_decode(file_get_contents($baseUrl . $checkLatest));
-$updated = false; 
+$version = $result->{"version"};
+$updated = startsWith($version, "1.5");
 ?>
 <!DOCTYPE html>
 <html lang="en">
