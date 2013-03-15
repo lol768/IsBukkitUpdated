@@ -128,7 +128,7 @@ if (!$filemtime || ($cacheAge >= $cacheLife)) {
               <ul class="nav">
                 <li class="active"><a href="/">Home</a></li>
                 <li><a href="https://github.com/Bukkit/CraftBukkit">GitHub</a></li>
-                <li><a href="http://dl.bukkit.org/downloads/" title = "Development builds are available by clicking Alternate Versions">Latest builds</a></li>
+                <li><a href="http://dl.bukkit.org/" title = "Development builds are available by clicking Alternate Versions">Latest builds</a></li>
                 <li><a href="http://forums.bukkit.org/">Forums</a></li>
                 
               </ul>
