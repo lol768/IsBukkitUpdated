@@ -1,4 +1,7 @@
 <?php
+$baseUrl = "http://dl.bukkit.org/api/1.0/";
+$checkLatest = "downloads/projects/craftbukkit/view/latest/?_accept=application%2Fjson";
+$result = json_decode(file_get_contents($baseUrl . $checkLatest));
 $updated = false; 
 ?>
 <!DOCTYPE html>
