@@ -16,11 +16,11 @@ if (!$filemtime || ($cacheAge >= $cacheLife)) {
 	$version = $result->{"version"}; //Grab the version string
 	$updated = startsWith($version, $newVersion); //Check if it starts with 1.5 (example is '1.4.7-R1.1')
 	file_put_contents($cacheFile, $version); //Save to cache file
-	$ci = "<em>Served from API directly</em>";
+	$ci = "<em>Served from API directly</em>"; //Cache info
 } else {
 	$version = file_get_contents($cacheFile); //Grab the version string from the cache
 	$updated = startsWith($version, $newVersion); //Check if it starts with 1.5 (example is '1.4.7-R1.1')
-	$ci = "<em>Served from cache - " . $cacheAge . " seconds old (will be refreshed after 300 seconds)</em>";
+	$ci = "<em>Served from cache - " . $cacheAge . " seconds old (will be refreshed after 300 seconds)</em>"; //Cache info
 }
 ?>
 <!DOCTYPE html>
