@@ -2,11 +2,26 @@
 function startsWith($haystack, $needle) {
     return !strncmp($haystack, $needle, strlen($needle));
 }
-$baseUrl = "http://dl.bukkit.org/api/1.0/";
-$checkLatest = "downloads/projects/craftbukkit/view/latest/?_accept=application%2Fjson";
-$result = json_decode(file_get_contents($baseUrl . $checkLatest));
-$version = $result->{"version"};
-$updated = startsWith($version, "1.5");
+//TODO: Make an API class and all that stuff
+
+$newVersion = "1.5";
+$cacheFile = "version.cache"; //where the version string is stored for caching purposes
+$cacheLife = 300; //caching time, in seconds
+$filemtime = @filemtime($cacheFile);  // returns FALSE if file does not exist
+$cacheAge = time() - $filemtime;
+if (!$filemtime || ($cacheAge >= $cacheLife)) {
+	$baseUrl = "http://dl.bukkit.org/api/1.0/"; //The base for the Bukkit DL API
+	$checkLatest = "downloads/projects/craftbukkit/view/latest/?_accept=application%2Fjson"; //The URL used to find information on the latest dev build of CraftBukkit
+	$result = json_decode(file_get_contents($baseUrl . $checkLatest)); //Grab the result and decode the JSON
+	$version = $result->{"version"}; //Grab the version string
+	$updated = startsWith($version, $newVersion); //Check if it starts with 1.5 (example is '1.4.7-R1.1')
+	file_put_contents($cacheFile, $version); //Save to cache file
+	$ci = "<em>Served from API directly</em>";
+} else {
+	$version = file_get_contents($cacheFile); //Grab the version string from the cache
+	$updated = startsWith($version, $newVersion); //Check if it starts with 1.5 (example is '1.4.7-R1.1')
+	$ci = "<em>Served from cache - " . $cacheAge . " seconds old (will be refreshed after 300 seconds)</em>";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -124,7 +139,7 @@ $updated = startsWith($version, "1.5");
 
       <!-- Jumbotron -->
       <div class="jumbotron">
-        <h1><?php if ($updated) { ?>Yep! A build for 1.5 has been released.<?php } else { ?>Nope, CraftBukkit is not yet updated for Minecraft 1.5.<?php } ?></h1>
+        <h1><?php if ($updated) { ?>Yep! A build for <?php echo ($newVersion); ?> has been released.<?php } else { ?>Nope, CraftBukkit is not yet updated for Minecraft <?php echo ($newVersion); ?>.<?php } ?></h1>
         <p class="lead"><?php if ($updated) { ?>You should be aware that this build may contain bugs, incomplete features and may not be stable. Use it at your own risk!<?php } else { ?>Don't despair! The Bukkit team are working hard to ensure the update process will be as smooth as possible without bugs. This means a better quality end-product that's not rushed.<?php } ?></p>
       </div>
 
@@ -134,7 +149,7 @@ $updated = startsWith($version, "1.5");
       <div class="row-fluid">
         <div class="span4">
           <h2><?php if ($updated) { ?>What happened<?php } else { ?>Events so far<?php } ?></h2>
-          <p>Minecraft 1.5 was tested in a number of snapshots, and published to the launcher on the <strong>13th of March</strong>. Since then, the Bukkit team have been working to update the CraftBukkit server software to support all of the new features in 1.5. <?php if ($updated) { ?>The update process has now progressed to a point where a build can be released.<?php } else { ?>This process has not yet finished.<?php } ?></p>
+          <p>Minecraft <?php echo ($newVersion); ?> was tested in a number of snapshots, and published to the launcher on the <strong>13th of March</strong>. Since then, the Bukkit team have been working to update the CraftBukkit server software to support all of the new features in <?php echo ($newVersion); ?>. <?php if ($updated) { ?>The update process has now progressed to a point where a build can be released.<?php } else { ?>This process has not yet finished.<?php } ?></p>
         </div>
         <div class="span4">
           <h2>Is there an ETA?</h2>
@@ -142,7 +157,7 @@ $updated = startsWith($version, "1.5");
        </div>
         <div class="span4">
           <h2>Unofficial builds</h2>
-          <p>Be wary of unofficial builds that claim to support 1.5 clients and implement the Bukkit API. You will receive no support if you use these, and in some cases they may cause crashes or not support the new features properly. For the best experience, wait until an official build of Craftbukkit is released for 1.5.</p>
+          <p>Be wary of unofficial builds that claim to support <?php echo ($newVersion); ?> clients and implement the Bukkit API. You will receive no support if you use these, and in some cases they may cause crashes or not support the new features properly. For the best experience, wait until an official build of Craftbukkit is released for <?php echo ($newVersion); ?>.</p>
         </div>
       </div>
  <div class="row-fluid">
@@ -153,17 +168,19 @@ $updated = startsWith($version, "1.5");
 
 
 </div>
-        <div class="span4"><h2>Page changelog</h2><p><ul><?php if ($updated) { ?><li>Changed page to reflect release of new build<?php } ?><li>Created page for the Minecraft 1.5 "Redstone Update".</li></ul></p><p><em>This page will be updated as builds are released and Minecraft is updated</em></p></div>
+        <div class="span4"><h2>Page changelog</h2><p><ul><?php if ($updated) { ?><li>Changed page to reflect release of new build<?php } ?><li>Created page for the Minecraft <?php echo ($newVersion); ?>.</li></ul></p><p><em>This page will be updated as builds are released and Minecraft is updated</em></p></div>
 <div class="span4">
         <h2>Sending PMs</h2>
-        <p>Please don't message staff or other users with unsolicited questions about CraftBukkit for 1.5 via IRC, the forums or BukkitDev. This only means a large number of messages to reply to, and could be perceived as spam. Thanks for your understanding.</p>
+        <p>Please don't message staff or other users with unsolicited questions about CraftBukkit for <?php echo ($newVersion); ?> via IRC, the forums or BukkitDev. This only means a large number of messages to reply to, and could be perceived as spam. Thanks for your understanding.</p>
         </div>
   
 </div>
       <hr>
 
       <div class="footer">
+      	<p class = "pull-right"><?php echo ($ci); ?></p>
         <p>This site is not affiliated with Mojang or Bukkit in any way.</p>
+        
       </div>
 
     </div> <!-- /container -->
