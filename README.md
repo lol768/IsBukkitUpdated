@@ -1,4 +1,8 @@
 IsBukkitUpdated
 ===============
 
-The GitHub repo for http://isbukkitupdated.com/
+The code that powers http://isbukkitupdated.com/
+
+Note
+===============
+This site is not affiliated with Bukkit or Mojang in any way
